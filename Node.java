@@ -10,8 +10,6 @@ class Node implements Comparable<Node>{
     int heuristic;
 
     byte move;
-    boolean isWin;
-    private boolean isError;
     private byte[][] tiles;
     private final static byte[] dirUp = new byte[]{0, -1};
     private final static byte[] dirDown = new byte[]{0, 1};
@@ -27,7 +25,6 @@ class Node implements Comparable<Node>{
             layer = (byte) (parent.layer+1);
         }
         move = 0;
-        isWin = isError = false;
         newBoard();
         visited = false;
         heuristic = 0;
@@ -40,6 +37,10 @@ class Node implements Comparable<Node>{
         }
     }
 
+    byte[][] getTiles(){
+        return tiles;
+    }
+
     void newBoard(){
         tiles = new byte[4][2];
         tiles[0] = new byte[]{3,3};
@@ -49,54 +50,41 @@ class Node implements Comparable<Node>{
     }
 
     List<Node> genChildren(){
+        //ArrayList children = new ArrayList<>();
         for (byte i = 0; i < 4; i++) {
             Node n = new Node(this);
             n.setTiles(tiles);
-            //String move = "";
             switch (i) {
                 //up
                 case 0:
-                    //move = "U ";
                     n.move = 8;
-                    n = makeMove(n, 8);
                     break;
-                //down
+                //left
                 case 1:
-                    //move = "D ";
                     n.move = 4;
-                    n = makeMove(n, 4);
                     break;
                 //left
                 case 2:
-                    //move = "L ";
                     n.move = 6;
-                    n = makeMove(n, 6);
                     break;
                 //right
                 case 3:
-                    //move = "R ";
                     n.move = 2;
-                    n = makeMove(n, 2);
                     break;
             }
-            if (!n.isError) {
+            if (makeMove(n, n.move)) {
                 children.add(n);
             }
         }
         return children;
     }
 
-    byte[][] getTiles(){
-        return tiles;
-    }
-
-
-    static private Node makeMove(Node trial, Integer dir) {
+    static private boolean makeMove(Node trial, byte dir) {
         byte[][] tiles = trial.getTiles();
         switch (dir) {
             case 8:
                 if (tiles[0][1] == 0) {
-                    trial.isError = true;
+                    return false;
                 }else {
                     for (int i = 1; i < tiles.length; i++) {
                         if (Objects.equals(tiles[i][0], tiles[0][0]) && tiles[i][1] == tiles[0][1] - 1) {
@@ -109,7 +97,7 @@ class Node implements Comparable<Node>{
                 break;
             case 2:
                 if (tiles[0][1] == 3) {
-                    trial.isError = true;
+                    return false;
                 }else {
                     for (int i = 1; i < tiles.length; i++) {
                         if (Objects.equals(tiles[i][0], tiles[0][0]) && tiles[i][1] == tiles[0][1] + 1) {
@@ -122,7 +110,7 @@ class Node implements Comparable<Node>{
                 break;
             case 4:
                 if (tiles[0][0] == 0) {
-                    trial.isError = true;
+                    return false;
                 }else {
                     for (int i = 1; i < tiles.length; i++) {
                         if (tiles[i][0] == tiles[0][0] - 1 && Objects.equals(tiles[i][1], tiles[0][1])) {
@@ -135,7 +123,7 @@ class Node implements Comparable<Node>{
                 break;
             case 6:
                 if (tiles[0][0] == 3) {
-                    trial.isError = true;
+                    return false;
                 }else {
                     for (int i = 1; i < tiles.length; i++) {
                         if (tiles[i][0] == tiles[0][0] + 1 && Objects.equals(tiles[i][1], tiles[0][1])) {
@@ -151,10 +139,11 @@ class Node implements Comparable<Node>{
             default:
                 System.err.print("No Such Direction");
         }
-        if((tiles[1][0]==1 & tiles[1][1]==1) && (tiles[2][0]==1 & tiles[2][1]==2) && (tiles[3][0]==1 & tiles[3][1]==3)) {
-            trial.isWin = true;
-        }
-        return trial;
+        return true;
+    }
+
+    boolean isWin(){
+        return (tiles[1][0]==1 & tiles[1][1]==1) && (tiles[2][0]==1 & tiles[2][1]==2) && (tiles[3][0]==1 & tiles[3][1]==3);
     }
 
     static private void moveTile(byte[] tile, byte[] direction) {
