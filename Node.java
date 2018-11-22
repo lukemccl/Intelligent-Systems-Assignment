@@ -49,7 +49,7 @@ class Node implements Comparable<Node>{
     }
 
     List<Node> genChildren(){
-        //ArrayList children = new ArrayList<>();
+        ArrayList<Node> children = new ArrayList<>();
         for (byte i = 0; i < 4; i++) {
             Node n = new Node(this);
             n.setTiles(tiles);
@@ -188,12 +188,5 @@ class Node implements Comparable<Node>{
     @Override
     public int compareTo(Node o) {
         return Integer.compare(heuristic, o.heuristic);
-       /* if(this.heuristic>o.heuristic){
-            return -1;
-        }
-        if(this.heuristic<o.heuristic){
-            return 1;
-        }
-        return 0;*/
     }
 }
