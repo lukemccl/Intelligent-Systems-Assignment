@@ -4,7 +4,7 @@ class AI {
     int size;
     int maxsize;
     long time;
-    List<Node> fringe;
+    private List<Node> fringe;
 
     AI(){
         fringe = new ArrayList<>();
