@@ -2,7 +2,6 @@ import java.util.*;
 
 class Node implements Comparable<Node>{
 
-
     Node parent;
     List<Node> children;
     byte layer;
