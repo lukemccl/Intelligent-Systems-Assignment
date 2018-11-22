@@ -13,18 +13,28 @@ class AI {
     }
 
     List<Node> bfs(){
-        ArrayDeque<Node> fringe = new ArrayDeque<>(6500000);
-        Node n = new Node(null);
-        n.newBoard();
-        fringe.add(n);
-        while(fringe.size()!=0){
-            Node current = fringe.pollFirst();
-            if (current.isWin){
-                return findPathBack(current);
+        try {
+            ArrayDeque<Node> fringe = new ArrayDeque<>(10000000);
+            Node n = new Node(null);
+            n.newBoard();
+            fringe.add(n);
+            int lastLayer = 0;
+            while (fringe.size() != 0) {
+                Node current = fringe.pollFirst();
+                //if(lastLayer!= current.layer) System.out.println(current.layer +  "\t" + size);
+                lastLayer = current.layer;
+                if (current.isWin) {
+                    return findPathBack(current);
+                }
+                List<Node> children = current.genChildren();
+                //size += children.size();
+                fringe.addAll(children);
+                size = fringe.size();
+                if (size % 15000 == 0) System.out.println(current.layer + "\t" + size);
             }
-            List<Node> children = current.genChildren();
-            size += children.size();
-            fringe.addAll(children);
+            return null;
+        }catch (java.lang.OutOfMemoryError e){
+            System.out.println("Halted on: " +size);
         }
         return null;
     }

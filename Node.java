@@ -63,20 +63,20 @@ class Node implements Comparable<Node>{
                 //down
                 case 1:
                     //move = "D ";
-                    n.move = 2;
-                    n = makeMove(n, 2);
+                    n.move = 4;
+                    n = makeMove(n, 4);
                     break;
                 //left
                 case 2:
                     //move = "L ";
-                    n.move = 4;
-                    n = makeMove(n, 4);
+                    n.move = 6;
+                    n = makeMove(n, 6);
                     break;
                 //right
                 case 3:
                     //move = "R ";
-                    n.move = 6;
-                    n = makeMove(n, 6);
+                    n.move = 2;
+                    n = makeMove(n, 2);
                     break;
             }
             if (!n.isError) {
