@@ -14,23 +14,27 @@ class AI {
 
     List<Node> bfs(){
         try {
-            ArrayDeque<Node> fringe = new ArrayDeque<>(10000000);
-            Node n = new Node(null);
-            n.newBoard();
-            fringe.add(n);
+            ArrayDeque<Node> fringe = new ArrayDeque<>(12000000);
+            Node start = new Node(null);
+            start.newBoard();
+            fringe.add(start);
             int lastLayer = 0;
             while (fringe.size() != 0) {
                 Node current = fringe.pollFirst();
                 //if(lastLayer!= current.layer) System.out.println(current.layer +  "\t" + size);
                 lastLayer = current.layer;
-                if (current.isWin) {
+                if (current.isWin()) {
                     return findPathBack(current);
                 }
                 List<Node> children = current.genChildren();
                 //size += children.size();
                 fringe.addAll(children);
                 size = fringe.size();
-                if (size % 15000 == 0) System.out.println(current.layer + "\t" + size);
+                for(Node n: children){
+                    if(n.isWin()) return findPathBack(n);
+                }
+
+                //if (size % 15000 == 0) System.out.println(current.layer + "\t" + size);
             }
             return null;
         }catch (java.lang.OutOfMemoryError e){
@@ -42,7 +46,7 @@ class AI {
     List<Node> dfs(Integer depth){
         while(fringe.size()!=0){
             Node current = fringe.get(0);
-            if(current.isWin){
+            if(current.isWin()){
                 return findPathBack(current);
             }else{
                 if(current.layer!=depth || depth==-1) {
@@ -77,7 +81,7 @@ class AI {
     List<Node> aStar(){
         while(fringe.size()!=0){
             Node current = fringe.get(0);
-            if(current.isWin){
+            if(current.isWin()){
                 System.out.println(size);
                 return findPathBack(current);
             }else{
@@ -131,11 +135,11 @@ class AI {
 
     boolean allChildrenVisited(Node n){
         boolean visited = true;
-        for (Node m : n.children) {
+      /*  for (Node m : n.children) {
             if (!m.visited) {
                 visited = false;
             }
-        }
+        }*/
         return visited;
     }
 
@@ -147,7 +151,7 @@ class AI {
             if(child.parent.visited){
                 cutTopOfRemovalTree(child.parent);
             }else{
-                child.parent.children.remove(child);
+               // child.parent.children.remove(child);
             }
         }
     }
